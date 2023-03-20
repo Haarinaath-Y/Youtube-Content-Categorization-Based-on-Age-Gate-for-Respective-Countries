@@ -1,0 +1,97 @@
+CREATE DATABASE ProjectDB;
+
+USE ProjectDB;
+
+CREATE TABLE COUNTRY (
+    Country_ID INTEGER,
+    ISO_code VARCHAR(3),
+    Country_name VARCHAR(20) PRIMARY KEY,
+    Telephonic_code INTEGER
+);
+
+CREATE TABLE PERSON (
+    Person_ID INTEGER PRIMARY KEY,
+    DOB VARCHAR(20),
+    Initial_name VARCHAR(10),
+    First_Name VARCHAR(20),
+    Last_name VARCHAR(20),
+    Country_name VARCHAR(20),
+    Phone_no VARCHAR(10),
+    Email VARCHAR(50),
+    Account_name VARCHAR(20),
+    Subscription VARCHAR(10),
+    FOREIGN KEY (country_name) REFERENCES COUNTRY(country_name)
+);
+
+CREATE TABLE GENDER (
+    Gender_ID INTEGER PRIMARY KEY,
+    Gender_code VARCHAR(5),
+    Person_ID INTEGER,
+    Gender_dsc VARCHAR(20),
+    FOREIGN KEY (Person_ID) REFERENCES PERSON(Person_ID)
+);
+
+CREATE TABLE AGE (
+    Age_id INTEGER PRIMARY KEY,
+    Country_name VARCHAR(20),
+    Person_ID INTEGER,
+    Age INTEGER,
+    FOREIGN KEY (Country_name) REFERENCES COUNTRY(Country_name),
+    FOREIGN KEY (Person_ID) REFERENCES PERSON(Person_ID)
+);
+
+CREATE TABLE YT_CONTENT_CATEGORY (
+    category_ID INTEGER PRIMARY KEY,
+    category_name VARCHAR(30),
+    category_desc VARCHAR(255)
+);
+
+CREATE TABLE YT_VIDEO_CONTENT (
+    video_ID INTEGER PRIMARY KEY,
+    Video_title VARCHAR(255),
+    Video_Tags VARCHAR(255),
+    Person_ID INTEGER,
+    Min_age VARCHAR(20),
+    publish_date DATE,
+    category_ID INTEGER,
+    views INTEGER,
+    likes INTEGER,
+    dislikes INTEGER,
+    FOREIGN KEY (Person_ID) REFERENCES PERSON(Person_ID),
+    FOREIGN KEY (category_ID) REFERENCES  YT_CONTENT_CATEGORY(category_ID)
+);
+
+CREATE TABLE TargetVideo (
+	Video_ID INT,
+	Person_ID INT,
+	Video_Category VARCHAR(30),
+	Age_Gate VARCHAR(10),
+	Country_name VARCHAR(20),
+	Publish_date DATE,
+	Engagement INT,
+	Trend_level Varchar(20),
+	total_views INT,
+	average_views_per_day FLOAT,
+	PRIMARY KEY (Video_ID),
+	FOREIGN KEY (Person_ID) REFERENCES TargetUser(Person_ID)
+); 
+
+CREATE TABLE TargetUser ( 
+Person_ID Integer PRIMARY KEY,
+Person_Name varchar(50),
+Person_Gender varchar(10),
+Person_Age Integer,
+Phone_no varchar(20),
+Country_name varchar(20));
+
+LOAD DATA LOCAL INFILE '/home/ubh01/Downloads/Country.csv' INTO TABLE COUNTRY FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE '/home/ubh01/Downloads/Person.csv' INTO TABLE PERSON FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE '/home/ubh01/Downloads/Gender.csv' INTO TABLE GENDER FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE '/home/ubh01/Downloads/Age.csv' INTO TABLE AGE FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE '/home/ubh01/Downloads/YTCat.csv' INTO TABLE YT_CONTENT_CATEGORY FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
+
+LOAD DATA LOCAL INFILE '/home/ubh01/Downloads/YTCon.csv' INTO TABLE  YT_VIDEO_CONTENT FIELDS TERMINATED BY ',' ENCLOSED BY '"' LINES TERMINATED BY '\n' IGNORE 1 ROWS;
