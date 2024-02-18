@@ -1,0 +1,15 @@
+create external table target1 (Person_ID Int, Person_Name varchar(50), Person_Gender varchar(10), Person_Age Int, Phone_no varchar(20)) partitioned by (Country_name varchar(20)) row format delimited fields terminated by ',' lines terminated by '\n' stored as textfile location '/output/country';
+
+create TEMPORARY table temptarget (Person_ID Int, Person_Name varchar(50), Person_Gender varchar(10), Person_Age Int, Phone_no varchar(20), Country_name varchar(20)) row format delimited fields terminated by ',' lines terminated by '\n';
+
+set hive.exec.dynamic.partition=true;
+
+set hive.exec.dynamic.partition.mode=nonstrict; 
+
+load data local inpath '/home/ubh01/Downloads/TargetUser.csv' into table temptarget;
+
+insert into table target1 partition(country_name) select person_id, person_name, person_gender, person_age, phone_no, country_name from temptarget;
+
+show partitions target1;
+
+select * from target1;
