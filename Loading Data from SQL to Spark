@@ -1,0 +1,47 @@
+val df_age = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "AGE").option("user", "root").option("password", "password").load()
+
+df_age.createOrReplaceTempView("age") 
+
+val df_country = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "COUNTRY").option("user", "root").option("password", "password").load()
+
+df_country.createOrReplaceTempView("country") 
+
+val df_gender = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "GENDER").option("user", "root").option("password", "password").load()  
+
+df_gender.createOrReplaceTempView("gender")
+
+ val df_person = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "PERSON").option("user", "root").option("password", "password").load()
+
+df_person.createOrReplaceTempView("person")
+
+val df_TargetUser = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "TargetUser").option("user", "root").option("password", "password").load()
+
+df_TargetUser.createOrReplaceTempView("TargetUser")
+
+val df_TargetVideo = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "TargetVideo").option("user", "root").option("password", "password").load()
+
+df_TargetVideo.createOrReplaceTempView("TargetVideo")
+
+
+val df_Content_Category = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "YT_CONTENT_CATEGORY").option("user", "root").option("password", "password").load()
+
+df_Content_Category.createOrReplaceTempView("Content_Category")
+
+
+val df_Content = spark.read.format("jdbc").option("driver","com.mysql.cj.jdbc.Driver").option("url", "jdbc:mysql://localhost:3306/ProjectDB").option("dbtable", "YT_VIDEO_CONTENT").option("user", "root").option("password", "password").load()
+
+df_Content.createOrReplaceTempView("content")
+
+
+
+
+
+spark.sql("insert into targetuser select p.Person_ID, concat(p.Initial_name,'.', p.First_name, p.Last_name), g.Gender_code, FLOOR(year(CURRENT_DATE) - year(p.DOB)), concat('+', c.Telephonic_code, p.phone_no), p.Country_name from person p join gender g on p.person_id = g.person_id join country c on p.Country_name = c.Country_name")
+
+df_TargetUser.write.format("csv").option("header", "true").save("/home/ubh01/Downloads/targetuser.csv")
+
+
+spark.sql("insert into TargetVideo select v.Video_ID, v.Person_ID, cat.category_name as Video_Category, v.Min_age as Age_Gate, p.country_name, v.publish_date,  v.likes-v.dislikes as Engagement, CASE WHEN Views <= 4000000 THEN 'Low' WHEN Views > 4000000 AND Views <= 8000000 THEN 'Medium' ELSE 'High' END, v.views as Total_views, CASE WHEN DATEDIFF(CURRENT_DATE, Publish_date) = 0 THEN Views ELSE Views / (DATEDIFF(CURRENT_DATE, Publish_date) + 1) END AS average_views_per_day from content v join content_category cat on v.category_ID = cat.category_ID join person p on v.person_ID = p.person_ID")
+
+
+df_TargetVideo.write.format("csv").option("header", "true").save("/home/ubh01/Downloads/targetvideo.csv")
