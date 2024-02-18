@@ -1,0 +1,4 @@
+sqoop import --connect jdbc:mysql://localhost:3306/ProjectDB --table TargetUser --username sqoop --password password --hive-import --hive-table ProjectDB.TargetUser --fields-terminated-by ',' --target-dir /data -m1
+
+sqoop import --connect jdbc:mysql://localhost:3306/ProjectDB --table TargetVideo --username sqoop --password password --hive-import --hive-table ProjectDB.TargetVideo --fields-terminated-by ',' --target-dir /data -m1
+
