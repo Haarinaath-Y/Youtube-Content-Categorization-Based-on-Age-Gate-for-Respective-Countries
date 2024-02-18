@@ -1,0 +1,16 @@
+CREATE TABLE TargetUser ( Person_ID Integer PRIMARY KEY, Person_Name varchar(50), Person_Gender varchar(10), Person_Age Integer, Phone_no varchar(20), Country_name varchar(20));
+
+CREATE TABLE TargetVideo (
+	Video_ID INT,
+	Person_ID INT,
+	Video_Category VARCHAR(30),
+	Age_Gate VARCHAR(10),
+	Country_name VARCHAR(20),
+	Publish_date DATE,
+	Engagement INT,
+	Trend_level Varchar(20),
+	total_views INT,
+	average_views_per_day FLOAT,
+	PRIMARY KEY (Video_ID),
+	FOREIGN KEY (Person_ID) REFERENCES TargetUser(Person_ID)
+); 
