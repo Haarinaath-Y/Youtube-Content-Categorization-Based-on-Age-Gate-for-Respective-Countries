@@ -1,0 +1,5 @@
+SELECT Trend_level, count(Video_ID) as Count from TargetVideo group by Trend_level order by Count ;
+
+SELECT Age_Gate, count(Video_ID) as Count from TargetVideo group by Age_Gate  order by Age_Gate;
+
+SELECT Video_Category, sum(Engagement) as total_engagement from TargetVideo Group by Video_category order by total_engagement desc;
